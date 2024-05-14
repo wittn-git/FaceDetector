@@ -1,6 +1,6 @@
 data_folder="data"
 
-for folder in train test val; do
+for folder in train test; do
     for subfolder in pos neg; do
         subfolder_path="$data_folder/$folder/$subfolder"
         file_count=$(ls -1 "$subfolder_path" | wc -l)
