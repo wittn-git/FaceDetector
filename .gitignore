@@ -162,3 +162,5 @@ cython_debug/
 # exclude data folder but only in the root directory
 /data/
 mini_data
+mini_data_pp
+data_pp
