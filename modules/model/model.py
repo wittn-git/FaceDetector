@@ -6,10 +6,13 @@ from tensorflow.keras.optimizers import Adam
 from sklearn.metrics import accuracy_score
 from modules.data.data_preprocessing import preprocess_folder
 import random
+import time
 
 def batch_generator(path_pos: str, path_neg: str, batch_size: int):
 
     pos_files, neg_files = os.listdir(path_pos), os.listdir(path_neg)
+    random.shuffle(pos_files)
+    random.shuffle(neg_files)
 
     occs = {k : 0 for k in pos_files + neg_files}
 
@@ -46,7 +49,8 @@ def build_model(
     train_neg_dir: str,
     model_path: str,
     batch_size: int = 32,
-    epochs: int = 10
+    epochs: int = 10,
+    steps_per_epoch: int = 10
 ):
     
     assert model_path.endswith(".keras") 
@@ -66,13 +70,8 @@ def build_model(
     ])
 
     model.compile(optimizer=Adam(), loss='binary_crossentropy', metrics=['accuracy'])
-    print("Compiled model")
     model.summary()
-    model.fit_generator(
-        train_generator,
-        steps_per_epoch=  10 * batch_size,
-        epochs=epochs
-    )
+    model.fit(train_generator, epochs=epochs, steps_per_epoch=steps_per_epoch)
     
     model.save(model_path)
 
@@ -93,9 +92,11 @@ def test_model(model_path : str, threshold : float, test_pos_dir : str, test_neg
         X_pos, X_neg = preprocess_folder(test_pos_dir, (80, 80)), preprocess_folder(test_neg_dir, (80, 80))
    
     y_pos, y_neg = np.ones(len(X_pos)), np.zeros(len(X_neg))
+    start_time = time.time()
     y_pos_pred, y_neg_pred = model.predict(X_pos), model.predict(X_neg)
+    duration = time.time() - start_time
     y_pos_pred, y_neg_pred = (y_pos_pred > threshold).astype(int), (y_neg_pred > threshold).astype(int)
 
     pos_accuracy, neg_accuracy = accuracy_score(y_pos, y_pos_pred), accuracy_score(y_neg, y_neg_pred)
 
-    return len(y_pos), pos_accuracy, len(y_neg), neg_accuracy
+    return len(y_pos), pos_accuracy, len(y_neg), neg_accuracy, duration / (len(y_pos) + len(y_neg))

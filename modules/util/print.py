@@ -1,4 +1,4 @@
-def print_model_performance(pos_points : int, pos_accuracy : float, neg_points : int, neg_accuracy : float):
+def print_model_performance(pos_points : int, pos_accuracy : float, neg_points : int, neg_accuracy : float, time_per_sample : float):
     
     TP, FN, FP = pos_accuracy * pos_points, (1 - pos_accuracy) * pos_points, (1 - neg_accuracy) * neg_points
 
@@ -12,3 +12,4 @@ def print_model_performance(pos_points : int, pos_accuracy : float, neg_points :
     print(f"Precision: {precision}")
     print(f"Recall: {recall}")
     print(f"F1 Score: {f1_score}")
+    print(f"Time per sample: {time_per_sample}s")
