@@ -8,5 +8,5 @@ Neural Network to detect faces.
 4. Train Model (X)
 5. Test Model (X)
 6. Write Mains for each function (X)
-7. Add time to test
-8. Finish Report
+7. Add time to test (X)
+8. Finish Report (X)
