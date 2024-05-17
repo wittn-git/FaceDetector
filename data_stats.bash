@@ -1,4 +1,4 @@
-data_folder="data_pp"
+data_folder="data"
 
 for folder in train test; do
     for subfolder in pos neg; do
